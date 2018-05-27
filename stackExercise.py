@@ -39,9 +39,9 @@ argument = sys.argv
 if len(argument) > 1:
   testingString = argument[1]
   token_list = re.split("([^0-9])", testingString)
-  print token_list
   currentOpener = ''
   stack = Stack()
+  structureRight = True
   for character in token_list:
     if character == '' or character == ' ':
       continue
@@ -49,10 +49,16 @@ if len(argument) > 1:
       stack.push(character)
       continue
     if isCloser(character):
+      if stack.size() == 0:
+        structureRight = False # starts with a closer, wrong
+        break
       currentOpener = stack.pop()
       if not retrieveCloseCharacter(currentOpener)==character:
-        print False 
-        sys.exit()
-  print True
+        structureRight = False # gets the wrong closer
+        break
+  if stack.size() == 0 and structureRight:
+    print True
+  else:
+    print False
 else:
   print "no arguments"
